@@ -8,7 +8,7 @@ import pdb
 
 logger = logging.getLogger(__name__)
 ################################################################
-root_dir = '/home/linlin/time/0903_classify_false_start/1003_raw_features/'
+root_dir = '/home/linlin/time/200315_ssr_disfluency_paper/'
 separator = '\t\t'
 ################################################################
 
@@ -100,7 +100,7 @@ def RunClassifier(source_path, dest_path):
     #           ' -p c1=2 ' + ' -e2 ' +
     #           train_path + " " + test_path +  " > " + result_path )
 
-    result_path = dest_path + '/' +  'result_l2sgd_c2_2.txt'
+    result_path = dest_path + '/' +  'result_l2sgd.txt'
     model_path = dest_path + '/' +  'l2sgd.model'
     os.system('crfsuite learn -m '+ model_path  + " -a l2sgd " +' -p c2=2 ' + ' -e2 ' +
               train_path + " " + test_path +  " > " + result_path )
@@ -157,7 +157,7 @@ def SentAccuracy(source_path, dest_path):
             elif 'te.txt' in filespath:
                 test_path = os.path.join(root, filespath)
 
-    result_path = path + '/' +  'result_l2sgd_c2_2.txt'
+    result_path = path + '/' +  'result_l2sgd.txt'
     model_path = path + '/' +  'l2sgd.model'
     reference_path = dest_path + '/' + 'reference.txt'
     # os.system('crfsuite learn -m '+ model_path  + " -a l2sgd " +' -p c2=2 ' + ' -e2 ' +
@@ -168,9 +168,9 @@ def SentAccuracy(source_path, dest_path):
     reference_file_obj = open(reference_path,'r')
     result_file_obj = open(result_path, 'a+')
 
-    [num_matches, num_lines] = Count(reference_file_obj)
-    result_file_obj.write("not matches - %d; total sents - %d; accuracy - %8.4f \n"
-                          %(num_matches, num_lines, (num_lines- num_matches)/float(num_lines)))
+    # [num_matches, num_lines] = Count(reference_file_obj)
+    # result_file_obj.write("not matches - %d; total sents - %d; accuracy - %8.4f \n"
+    #                       %(num_matches, num_lines, (num_lines- num_matches)/float(num_lines)))
     reference_file_obj.close()
     result_file_obj.close()
 
@@ -334,6 +334,6 @@ if __name__ == '__main__':
     result_dir = output_root_dir + "/classificationStep4"
     RunClassifier( attr_dir, result_dir)
 
-    # os.makedirs(output_root_dir + "/countSenAccurStep5")
-    # accuracy_dir = output_root_dir + "/countSenAccurStep5"
-    # SentAccuracy(result_dir, accuracy_dir)
+    os.makedirs(output_root_dir + "/countSenAccurStep5")
+    accuracy_dir = output_root_dir + "/countSenAccurStep5"
+    SentAccuracy(result_dir, accuracy_dir)

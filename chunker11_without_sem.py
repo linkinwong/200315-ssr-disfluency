@@ -9,7 +9,7 @@ __author__ = linlin
 separator = ' '
 
 # Field names of the input data.
-fields = 'y w pos token part pp p n nn ng2 ng3 ng4 ng3pr'
+fields = 'y w pos token part pp p n nn'
 
 # Attribute templates.
 templates = (
@@ -37,10 +37,10 @@ templates = (
     (('p', 0),),
     (('n', 0),),
     (('nn', 0),),
-    (('ng2', 0),),
-    (('ng3', 0),),
-    (('ng4', 0),),
-    (('ng3pr', 0),),
+    # (('ng2', 0),),
+    # (('ng3', 0),),
+    # (('ng4', 0),),
+    # (('ng3pr', 0),),
     )
 import crfutils
 
