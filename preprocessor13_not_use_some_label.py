@@ -34,7 +34,7 @@ def MakeNewFolderVersionHigher(data_directory, dir_name):
 
 #########################################################
 output_root_dir = MakeNewFolderVersionHigher(root_dir, 'processDir' )
-data_dir = root_dir + 'data1'
+data_dir = root_dir + 'data8-removal'
 code_dir = root_dir + 'src/'
 ##############################################################
 
@@ -262,19 +262,28 @@ def Standardize(path, dest_dir,  sep):
             p = repetition_vec_list[k][1]
             n = repetition_vec_list[k][2]
             nn = repetition_vec_list[k][3]
+            pred_label = word_list[6]
+            new_pred_label = word_list[9]
+            marginal = word_list[7]
 
-        #pdb.set_trace()
         if len(line)<13:
             line_format = ''
-        else:
-            line_format = (
-                "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s"
-                %(label, sep, token,sep,pos, sep,word,sep,patial, sep,
-                  pp, sep, p, sep, n,sep, nn))
-
-        if  ('false_start' == label) or ('' == line_format) or ('OK' == label):
             output_file_obj.write(line_format)
             output_file_obj.write('\n')
+        else:
+            line_format = (
+                "%s%s%s%s%s%s%s"
+                %(token, sep, label, sep, marginal, sep, new_pred_label))
+            line_format1 = (
+                "%s%s%s%s ^ %s ^"
+                %(token, sep, label, sep,sep))
+
+            if  ('filler' == pred_label) or ('other' == pred_label) or ('repeat' == pred_label):
+                output_file_obj.write(line_format1)
+                output_file_obj.write('\n')
+            else:
+                output_file_obj.write(line_format)
+                output_file_obj.write('\n')
 
     output_file_obj.close()
     file_obj.close()
@@ -314,26 +323,22 @@ def GetSsrFeature(path, dest_dir,  sep):
 
 if __name__ == '__main__':
 
-    output_root_dir = '/home/linlin/time/200315_ssr_disfluency_paper/processDir_7-from-attr-on'
 
     logFile = output_root_dir + "/logFile.txt"
     logging.basicConfig(filename=logFile, level = logging.DEBUG)
 
-    # os.makedirs(output_root_dir + "/standardStep1")
+    os.makedirs(output_root_dir + "/standardStep1")
     dest_dir = output_root_dir + "/standardStep1"
-    # DirProcessing(data_dir, dest_dir)
+    DirProcessing(data_dir, dest_dir)
 
-    # os.makedirs(output_root_dir + "/standardStep2") #
-    # dest_dir = output_root_dir + "/standardStep2"
-    # DirProcessing(data_dir, dest_dir) #
 
-    os.makedirs(output_root_dir + "/attributesStep3")
-    attr_dir = output_root_dir + "/attributesStep3"
-    GetAttributes(dest_dir, attr_dir)
+    # os.makedirs(output_root_dir + "/attributesStep3")
+    # attr_dir = output_root_dir + "/attributesStep3"
+    # GetAttributes(dest_dir, attr_dir)
 
-    os.makedirs(output_root_dir + "/classificationStep4")
-    result_dir = output_root_dir + "/classificationStep4"
-    RunClassifier( attr_dir, result_dir)
+    # os.makedirs(output_root_dir + "/classificationStep4")
+    # result_dir = output_root_dir + "/classificationStep4"
+    # RunClassifier( attr_dir, result_dir)
 
     # os.makedirs(output_root_dir + "/countSenAccurStep5")
     # accuracy_dir = output_root_dir + "/countSenAccurStep5"
