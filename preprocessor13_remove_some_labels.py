@@ -8,7 +8,7 @@ import pdb
 
 logger = logging.getLogger(__name__)
 ################################################################
-root_dir = '/home/linlin/time/200315_ssr_disfluency_paper/'
+root_dir = '/home/linlin/time/0903_classify_false_start/1003_raw_features/'
 separator = '\t\t'
 ################################################################
 
@@ -258,7 +258,6 @@ def Standardize(path, dest_dir,  sep):
             word = word_list[2]
             #sem = word_list[3]
             patial = patial
-            #pdb.set_trace()
             pp = repetition_vec_list[k][0]
             p = repetition_vec_list[k][1]
             n = repetition_vec_list[k][2]
@@ -273,8 +272,9 @@ def Standardize(path, dest_dir,  sep):
                 %(label, sep, token,sep,pos, sep,word,sep,patial, sep,
                   pp, sep, p, sep, n,sep, nn))
 
-        output_file_obj.write(line_format)
-        output_file_obj.write('\n')
+        if  ('false_start' == label) or ('' == line_format) or ('OK' == label):
+            output_file_obj.write(line_format)
+            output_file_obj.write('\n')
 
     output_file_obj.close()
     file_obj.close()
@@ -334,6 +334,6 @@ if __name__ == '__main__':
     result_dir = output_root_dir + "/classificationStep4"
     RunClassifier( attr_dir, result_dir)
 
-    os.makedirs(output_root_dir + "/countSenAccurStep5")
-    accuracy_dir = output_root_dir + "/countSenAccurStep5"
-    SentAccuracy(result_dir, accuracy_dir)
+    # os.makedirs(output_root_dir + "/countSenAccurStep5")
+    # accuracy_dir = output_root_dir + "/countSenAccurStep5"
+    # SentAccuracy(result_dir, accuracy_dir)

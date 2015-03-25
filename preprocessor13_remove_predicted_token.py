@@ -34,7 +34,7 @@ def MakeNewFolderVersionHigher(data_directory, dir_name):
 
 #########################################################
 output_root_dir = MakeNewFolderVersionHigher(root_dir, 'processDir' )
-data_dir = root_dir + 'data1'
+data_dir = root_dir + 'data7-process-test'
 code_dir = root_dir + 'src/'
 ##############################################################
 
@@ -100,7 +100,7 @@ def RunClassifier(source_path, dest_path):
     #           ' -p c1=2 ' + ' -e2 ' +
     #           train_path + " " + test_path +  " > " + result_path )
 
-    result_path = dest_path + '/' +  'result_l2sgd_c2_2.txt'
+    result_path = dest_path + '/' +  'result_l2sgd.txt'
     model_path = dest_path + '/' +  'l2sgd.model'
     os.system('crfsuite learn -m '+ model_path  + " -a l2sgd " +' -p c2=2 ' + ' -e2 ' +
               train_path + " " + test_path +  " > " + result_path )
@@ -157,7 +157,7 @@ def SentAccuracy(source_path, dest_path):
             elif 'te.txt' in filespath:
                 test_path = os.path.join(root, filespath)
 
-    result_path = path + '/' +  'result_l2sgd_c2_2.txt'
+    result_path = path + '/' +  'result_l2sgd.txt'
     model_path = path + '/' +  'l2sgd.model'
     reference_path = dest_path + '/' + 'reference.txt'
     # os.system('crfsuite learn -m '+ model_path  + " -a l2sgd " +' -p c2=2 ' + ' -e2 ' +
@@ -168,9 +168,9 @@ def SentAccuracy(source_path, dest_path):
     reference_file_obj = open(reference_path,'r')
     result_file_obj = open(result_path, 'a+')
 
-    [num_matches, num_lines] = Count(reference_file_obj)
-    result_file_obj.write("not matches - %d; total sents - %d; accuracy - %8.4f \n"
-                          %(num_matches, num_lines, (num_lines- num_matches)/float(num_lines)))
+    # [num_matches, num_lines] = Count(reference_file_obj)
+    # result_file_obj.write("not matches - %d; total sents - %d; accuracy - %8.4f \n"
+    #                       %(num_matches, num_lines, (num_lines- num_matches)/float(num_lines)))
     reference_file_obj.close()
     result_file_obj.close()
 
@@ -195,6 +195,7 @@ def FindNeighborTokenSubscript(first_token_list, current_pos , up_or_down ):
 
 
 def Standardize(path, dest_dir,  sep):
+    pdb.set_trace()
     output_path = dest_dir+ '/' + os.path.basename(path) + '.standard'
     output_file_obj = open(output_path,'w')
 
@@ -258,24 +259,29 @@ def Standardize(path, dest_dir,  sep):
             word = word_list[2]
             #sem = word_list[3]
             patial = patial
-            #pdb.set_trace()
             pp = repetition_vec_list[k][0]
             p = repetition_vec_list[k][1]
             n = repetition_vec_list[k][2]
             nn = repetition_vec_list[k][3]
+            pred_label = word_list[6]
 
-        #pdb.set_trace()
         if len(line)<13:
             line_format = ''
+            output_file_obj.write(line_format)
+            output_file_obj.write('\n')
         else:
             line_format = (
                 "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s"
                 %(label, sep, token,sep,pos, sep,word,sep,patial, sep,
                   pp, sep, p, sep, n,sep, nn))
 
-        output_file_obj.write(line_format)
-        output_file_obj.write('\n')
+            if  ('filler' == pred_label) or ('other' == pred_label) or ('repeat' == pred_label):
+                pass
+            else:
+                output_file_obj.write(line_format)
+                output_file_obj.write('\n')
 
+    pdb.set_trace()
     output_file_obj.close()
     file_obj.close()
 
@@ -322,18 +328,15 @@ if __name__ == '__main__':
     dest_dir = output_root_dir + "/standardStep1"
     DirProcessing(data_dir, dest_dir)
 
-    # os.makedirs(output_root_dir + "/standardStep2") #
-    # dest_dir = output_root_dir + "/standardStep2"
-    # DirProcessing(data_dir, dest_dir) #
 
-    os.makedirs(output_root_dir + "/attributesStep3")
-    attr_dir = output_root_dir + "/attributesStep3"
-    GetAttributes(dest_dir, attr_dir)
+    # os.makedirs(output_root_dir + "/attributesStep3")
+    # attr_dir = output_root_dir + "/attributesStep3"
+    # GetAttributes(dest_dir, attr_dir)
 
-    os.makedirs(output_root_dir + "/classificationStep4")
-    result_dir = output_root_dir + "/classificationStep4"
-    RunClassifier( attr_dir, result_dir)
+    # os.makedirs(output_root_dir + "/classificationStep4")
+    # result_dir = output_root_dir + "/classificationStep4"
+    # RunClassifier( attr_dir, result_dir)
 
-    os.makedirs(output_root_dir + "/countSenAccurStep5")
-    accuracy_dir = output_root_dir + "/countSenAccurStep5"
-    SentAccuracy(result_dir, accuracy_dir)
+    # os.makedirs(output_root_dir + "/countSenAccurStep5")
+    # accuracy_dir = output_root_dir + "/countSenAccurStep5"
+    # SentAccuracy(result_dir, accuracy_dir)

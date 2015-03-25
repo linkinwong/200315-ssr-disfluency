@@ -100,7 +100,7 @@ def RunClassifier(source_path, dest_path):
     #           ' -p c1=2 ' + ' -e2 ' +
     #           train_path + " " + test_path +  " > " + result_path )
 
-    result_path = dest_path + '/' +  'result_l2sgd_c2_2.txt'
+    result_path = dest_path + '/' +  'result_l2sgd.txt'
     model_path = dest_path + '/' +  'l2sgd.model'
     os.system('crfsuite learn -m '+ model_path  + " -a l2sgd " +' -p c2=2 ' + ' -e2 ' +
               train_path + " " + test_path +  " > " + result_path )
@@ -157,7 +157,7 @@ def SentAccuracy(source_path, dest_path):
             elif 'te.txt' in filespath:
                 test_path = os.path.join(root, filespath)
 
-    result_path = path + '/' +  'result_l2sgd_c2_2.txt'
+    result_path = path + '/' +  'result_l2sgd.txt'
     model_path = path + '/' +  'l2sgd.model'
     reference_path = dest_path + '/' + 'reference.txt'
     # os.system('crfsuite learn -m '+ model_path  + " -a l2sgd " +' -p c2=2 ' + ' -e2 ' +
@@ -168,9 +168,9 @@ def SentAccuracy(source_path, dest_path):
     reference_file_obj = open(reference_path,'r')
     result_file_obj = open(result_path, 'a+')
 
-    [num_matches, num_lines] = Count(reference_file_obj)
-    result_file_obj.write("not matches - %d; total sents - %d; accuracy - %8.4f \n"
-                          %(num_matches, num_lines, (num_lines- num_matches)/float(num_lines)))
+    # [num_matches, num_lines] = Count(reference_file_obj)
+    # result_file_obj.write("not matches - %d; total sents - %d; accuracy - %8.4f \n"
+    #                       %(num_matches, num_lines, (num_lines- num_matches)/float(num_lines)))
     reference_file_obj.close()
     result_file_obj.close()
 
@@ -258,7 +258,6 @@ def Standardize(path, dest_dir,  sep):
             word = word_list[2]
             #sem = word_list[3]
             patial = patial
-            #pdb.set_trace()
             pp = repetition_vec_list[k][0]
             p = repetition_vec_list[k][1]
             n = repetition_vec_list[k][2]
@@ -273,8 +272,9 @@ def Standardize(path, dest_dir,  sep):
                 %(label, sep, token,sep,pos, sep,word,sep,patial, sep,
                   pp, sep, p, sep, n,sep, nn))
 
-        output_file_obj.write(line_format)
-        output_file_obj.write('\n')
+        if  ('false_start' == label) or ('' == line_format) or ('OK' == label):
+            output_file_obj.write(line_format)
+            output_file_obj.write('\n')
 
     output_file_obj.close()
     file_obj.close()
@@ -314,13 +314,14 @@ def GetSsrFeature(path, dest_dir,  sep):
 
 if __name__ == '__main__':
 
+    output_root_dir = '/home/linlin/time/200315_ssr_disfluency_paper/processDir_6-merge-4-and-3'
 
     logFile = output_root_dir + "/logFile.txt"
     logging.basicConfig(filename=logFile, level = logging.DEBUG)
 
-    os.makedirs(output_root_dir + "/standardStep1")
+    # os.makedirs(output_root_dir + "/standardStep1")
     dest_dir = output_root_dir + "/standardStep1"
-    DirProcessing(data_dir, dest_dir)
+    # DirProcessing(data_dir, dest_dir)
 
     # os.makedirs(output_root_dir + "/standardStep2") #
     # dest_dir = output_root_dir + "/standardStep2"
@@ -334,6 +335,6 @@ if __name__ == '__main__':
     result_dir = output_root_dir + "/classificationStep4"
     RunClassifier( attr_dir, result_dir)
 
-    os.makedirs(output_root_dir + "/countSenAccurStep5")
-    accuracy_dir = output_root_dir + "/countSenAccurStep5"
-    SentAccuracy(result_dir, accuracy_dir)
+    # os.makedirs(output_root_dir + "/countSenAccurStep5")
+    # accuracy_dir = output_root_dir + "/countSenAccurStep5"
+    # SentAccuracy(result_dir, accuracy_dir)
